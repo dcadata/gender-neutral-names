@@ -6,6 +6,9 @@ class DataManager:
 
     def __init__(self):
         self._years = tuple(range(1900, 2020 + 1))
+        self.df = None
+        self.summary = None
+        self.ratio = None
 
     def load_data_from_disk(self):
         self.df = self._df.copy()
@@ -14,10 +17,6 @@ class DataManager:
         self._read_all_files()
         self._calculate_percentages()
         self.df.to_csv(self._data_fp, index=False)
-
-    def categorize(self):
-        self._add_fields()
-        self._create_dataframes_to_plot()
 
     def _read_all_files(self):
         dfs = [_read_one_file(f'data/yob{year}.txt').assign(year=year) for year in self._years]
@@ -29,7 +28,7 @@ class DataManager:
                     self.df.loc[self.df.year == year, 'number'] / self.df.loc[self.df.year == year, 'number'].sum()
             )
 
-    def _add_fields(self):
+    def add_fields(self):
         pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['number_as_pct'].sum().rename(
             columns={'number_as_pct': 'pct_of_births'})
         self.df = self.df.merge(pct_of_births_table, on=['name', 'year'])
@@ -38,8 +37,8 @@ class DataManager:
         self.df['ratio_rank_abs'] = self.df.ratio_rank.apply(abs)
         self.df['ratio_category'] = self.df.ratio_rank_abs.apply(_categorize)
 
-    def _create_dataframes_to_plot(self):
-        self.categories = self.df.groupby(by=['year', 'ratio_category'], as_index=False)['number_as_pct'].sum()
+    def create_dataframes_to_plot(self):
+        self.summary = self.df.groupby(by=['year', 'ratio_category'], as_index=False)['number_as_pct'].sum()
         self.ratio = self.df[['year', 'ratio_rank']]
 
     @property
