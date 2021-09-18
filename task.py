@@ -60,14 +60,14 @@ def _read_one_file(filepath):
 
 def _categorize(x):
     if x <= 0.1:
-        return 1
+        return '1: most neutral'
     if x <= 0.2:
-        return 2
+        return '2: very neutral'
     if x <= 0.3:
-        return 3
+        return '3: somewhat neutral'
     if x <= 0.4:
-        return 4
-    return 5
+        return '4: mostly gendered'
+    return '5: highly gendered'
 
 
 def main():
