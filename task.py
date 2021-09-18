@@ -34,8 +34,7 @@ class DataManager:
         self.df = self.df.merge(pct_of_births_table, on=['name', 'year'])
         self.df['ratio'] = self.df.number_as_pct / self.df.pct_of_births
         self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
-        self.df['ratio_rank_abs'] = self.df.ratio_rank.apply(abs)
-        self.df['ratio_category'] = self.df.ratio_rank_abs.apply(_categorize)
+        self.df['ratio_category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
 
     def create_dataframes_to_plot(self):
         self.summary = self.df.groupby(by=['year', 'ratio_category'], as_index=False)['number_as_pct'].sum()
