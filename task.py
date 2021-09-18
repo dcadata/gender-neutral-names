@@ -2,8 +2,22 @@ import pandas as pd
 
 
 class DataManager:
+    _data_fp = 'data/data.csv'
+
     def __init__(self):
-        self._years = tuple(range(1900, 2020 + 1, 10))  #
+        self._years = tuple(range(1900, 2020 + 1))
+
+    def load_data_from_disk(self):
+        self.df = self._df.copy()
+
+    def regenerate_data(self):
+        self._read_all_files()
+        self._calculate_percentages()
+        self.df.to_csv(self._data_fp, index=False)
+
+    def categorize(self):
+        self._add_fields()
+        self._create_dataframes_to_plot()
 
     def _read_all_files(self):
         dfs = [_read_one_file(f'data/yob{year}.txt').assign(year=year) for year in self._years]
@@ -11,17 +25,55 @@ class DataManager:
 
     def _calculate_percentages(self):
         for year in self._years:
-            total_births = self.df.loc[self.df.year == year, 'number'].sum()
-            self.df.loc[self.df.year == year, 'pct'] = self.df.loc[self.df.year == year, 'number'] / total_births
-            for sex in ('F', 'M'):
-                condition = (self.df.year == year) & (self.df.sex == sex)
-                total_births = self.df.loc[condition, 'number'].sum()
-                self.df.loc[condition, 'pct_sex'] = self.df.loc[condition, 'number'] / total_births
+            self.df.loc[self.df.year == year, 'number_as_pct'] = (
+                    self.df.loc[self.df.year == year, 'number'] / self.df.loc[self.df.year == year, 'number'].sum()
+            )
 
-    def _calculate_gender_neutrality(self):
-        pass
+    def _add_fields(self):
+        pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['number_as_pct'].sum().rename(
+            columns={'number_as_pct': 'pct_of_births'})
+        self.df = self.df.merge(pct_of_births_table, on=['name', 'year'])
+        self.df['ratio'] = self.df.number_as_pct / self.df.pct_of_births
+        self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
+        self.df['ratio_rank_abs'] = self.df.ratio_rank.apply(abs)
+        self.df['ratio_category'] = self.df.ratio_rank_abs.apply(_categorize)
+
+    def _create_dataframes_to_plot(self):
+        self.categories = self.df.groupby(by=['year', 'ratio_category'], as_index=False)['number_as_pct'].sum()
+        self.ratio = self.df[['year', 'ratio_rank']]
+
+    @property
+    def _df(self):
+        dtypes = {
+            'name': str,
+            'sex': str,
+            'number': int,
+            'year': int,
+            'number_as_pct': float,
+        }
+        return pd.read_csv(self._data_fp, usecols=dtypes.keys(), dtype=dtypes)
 
 
 def _read_one_file(filepath):
     df = pd.read_csv(filepath, names=['name', 'sex', 'number'], dtype={'name': str, 'sex': str, 'number': int})
     return df
+
+
+def _categorize(x):
+    if x <= 0.1:
+        return 1
+    if x <= 0.2:
+        return 2
+    if x <= 0.3:
+        return 3
+    if x <= 0.4:
+        return 4
+    return 5
+
+
+def main():
+    pass
+
+
+if __name__ == '__main__':
+    main()
