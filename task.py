@@ -1,4 +1,6 @@
 import pandas as pd
+import seaborn as sns
+from dtools import df2table
 
 
 class DataManager:
@@ -52,6 +54,45 @@ class DataManager:
         return pd.read_csv(self._data_fp, usecols=dtypes.keys(), dtype=dtypes)
 
 
+class Plotter(DataManager):
+    def create_outputs(self):
+        self._plot_neutral_categories()
+        self._plot_all_categories()
+        self._create_markdown_table()
+
+    def _plot_all_categories(self):
+        plot = sns.pointplot(x='year', y='pct', hue='category', data=self.summary, palette='husl')
+        fig = plot.get_figure()
+        fig.autofmt_xdate()
+        fig.set_size_inches(14, 14)
+        fig.suptitle('Percentage of births accounted for by names in each category, 1900 to latest')
+        fig.savefig('img/categories.png')
+
+    def _plot_neutral_categories(self):
+        plot = sns.pointplot(x='year', y='pct', hue='category', data=self.summary[
+            ~self.summary.category.str.startswith('5')], palette='husl')
+        fig = plot.get_figure()
+        fig.autofmt_xdate()
+        fig.set_size_inches(14, 14)
+        fig.suptitle('Percentage of births accounted for by gender-neutral names in each category, 1900 to latest')
+        fig.savefig('img/categories_neutral.png')
+
+    def _create_markdown_table(self):
+        df = self.summary.copy()
+        year_min = df.year.min()
+        year_max = df.year.max()
+        df.pct = df.pct.apply(lambda x: round(x, 3))
+        df_min = df[df.year == year_min].copy()
+        df_max = df[df.year == year_max].copy()
+        text = [
+            f'**Year: {year_min}**',
+            df2table(columns=df_min.columns, records=df_min.to_records(index=False)),
+            f'**Year: {year_max}**',
+            df2table(columns=df_max.columns, records=df_max.to_records(index=False)),
+        ]
+        open('markdown_table.txt', 'w').write('\n\n'.join(text))
+
+
 def _read_one_file(filepath):
     df = pd.read_csv(filepath, names=['name', 'sex', 'number'], dtype={'name': str, 'sex': str, 'number': int})
     return df
@@ -70,7 +111,11 @@ def _categorize(x):
 
 
 def main():
-    pass
+    self = Plotter()
+    self.load_data_from_disk()
+    self.add_fields()
+    self.create_dataframes_to_plot()
+    self.create_outputs()
 
 
 if __name__ == '__main__':
