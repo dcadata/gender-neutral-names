@@ -24,20 +24,20 @@ class DataManager:
 
     def _calculate_percentages(self):
         for year in self._years:
-            self.df.loc[self.df.year == year, 'number_as_pct'] = (
+            self.df.loc[self.df.year == year, 'pct'] = (
                     self.df.loc[self.df.year == year, 'number'] / self.df.loc[self.df.year == year, 'number'].sum()
             )
 
     def add_fields(self):
-        pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['number_as_pct'].sum().rename(
-            columns={'number_as_pct': 'pct_of_births'})
+        pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['pct'].sum().rename(
+            columns={'pct': 'pct_of_births'})
         self.df = self.df.merge(pct_of_births_table, on=['name', 'year'])
-        self.df['ratio'] = self.df.number_as_pct / self.df.pct_of_births
+        self.df['ratio'] = self.df.pct / self.df.pct_of_births
         self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
-        self.df['ratio_category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
+        self.df['category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
 
     def create_dataframes_to_plot(self):
-        self.summary = self.df.groupby(by=['year', 'ratio_category'], as_index=False)['number_as_pct'].sum()
+        self.summary = self.df.groupby(by=['year', 'category'], as_index=False)['pct'].sum()
         self.ratio = self.df[['year', 'ratio_rank']].copy()  # unplotted
 
     @property
@@ -47,7 +47,7 @@ class DataManager:
             'sex': str,
             'number': int,
             'year': int,
-            'number_as_pct': float,
+            'pct': float,
         }
         return pd.read_csv(self._data_fp, usecols=dtypes.keys(), dtype=dtypes)
 
