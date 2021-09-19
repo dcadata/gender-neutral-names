@@ -82,13 +82,11 @@ class Plotter(DataManager):
         year_min = df.year.min()
         year_max = df.year.max()
         df.pct = df.pct.apply(lambda x: round(x, 3))
-        df_min = df[df.year == year_min].copy()
-        df_max = df[df.year == year_max].copy()
         text = [
             f'**Year: {year_min}**',
-            df2table(df=df_min),
+            df2table(df=df[df.year == year_min]),
             f'**Year: {year_max}**',
-            df2table(df=df_max),
+            df2table(df=df[df.year == year_max]),
         ]
         open('markdown_table.txt', 'w').write('\n\n'.join(text))
 
