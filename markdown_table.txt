@@ -1,0 +1,19 @@
+**Year: 1900**
+
+| year | category | pct |
+| ----- | ----- | ----- |
+| 1900 | 1: most neutral | 0.003 |
+| 1900 | 2: very neutral | 0.011 |
+| 1900 | 3: somewhat neutral | 0.009 |
+| 1900 | 4: mostly gendered | 0.016 |
+| 1900 | 5: highly gendered | 0.96 |
+
+**Year: 2020**
+
+| year | category | pct |
+| ----- | ----- | ----- |
+| 2020 | 1: most neutral | 0.016 |
+| 2020 | 2: very neutral | 0.019 |
+| 2020 | 3: somewhat neutral | 0.027 |
+| 2020 | 4: mostly gendered | 0.032 |
+| 2020 | 5: highly gendered | 0.907 |
