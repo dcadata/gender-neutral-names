@@ -111,11 +111,11 @@ def _categorize(x):
 
 
 def main():
-    self = Plotter()
-    self.load_data_from_disk()
-    self.add_fields()
-    self.create_dataframes_to_plot()
-    self.create_outputs()
+    plotter = Plotter()
+    plotter.load_data_from_disk()
+    plotter.add_fields()
+    plotter.create_dataframes_to_plot()
+    plotter.create_outputs()
 
 
 if __name__ == '__main__':
