@@ -86,9 +86,9 @@ class Plotter(DataManager):
         df_max = df[df.year == year_max].copy()
         text = [
             f'**Year: {year_min}**',
-            df2table(columns=df_min.columns, records=df_min.to_records(index=False)),
+            df2table(df=df_min),
             f'**Year: {year_max}**',
-            df2table(columns=df_max.columns, records=df_max.to_records(index=False)),
+            df2table(df=df_max),
         ]
         open('markdown_table.txt', 'w').write('\n\n'.join(text))
 
