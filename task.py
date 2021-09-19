@@ -38,7 +38,7 @@ class DataManager:
 
     def create_dataframes_to_plot(self):
         self.summary = self.df.groupby(by=['year', 'ratio_category'], as_index=False)['number_as_pct'].sum()
-        self.ratio = self.df[['year', 'ratio_rank']]
+        self.ratio = self.df[['year', 'ratio_rank']].copy()  # unplotted
 
     @property
     def _df(self):
