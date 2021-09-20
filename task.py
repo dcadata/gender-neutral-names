@@ -31,15 +31,13 @@ class DataManager:
                     self.df.loc[self.df.year == year, 'number'] / self.df.loc[self.df.year == year, 'number'].sum()
             )
 
-    def add_fields(self):
+    def create_dataframes_to_plot(self):
         self._pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['pct'].sum().rename(columns={
             'pct': 'pct_of_births'})
         self.df = self.df.merge(self._pct_of_births_table, on=['name', 'year'])
         self.df['ratio'] = self.df.pct / self.df.pct_of_births
         self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
         self.df['category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
-
-    def create_dataframes_to_plot(self):
         self.summary = self.df.groupby(by=['year', 'category'], as_index=False)['pct'].sum()
         self.ratio = self.df[['year', 'ratio_rank']].copy()  # unplotted
 
@@ -107,15 +105,3 @@ def _categorize(x):
     if x <= 0.4:
         return '4: mostly gendered'
     return '5: highly gendered'
-
-
-def main():
-    plotter = Plotter()
-    plotter.load_data_from_disk()
-    plotter.add_fields()
-    plotter.create_dataframes_to_plot()
-    plotter.create_outputs()
-
-
-if __name__ == '__main__':
-    main()
