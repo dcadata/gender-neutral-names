@@ -16,7 +16,17 @@ class DataManager:
     def load_data_from_disk(self):
         self.df = self._df.copy()
 
-    def regenerate_data(self):
+    def create_dataframes_to_plot(self):
+        self._pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['pct'].sum().rename(columns={
+            'pct': 'pct_of_births'})
+        self.df = self.df.merge(self._pct_of_births_table, on=['name', 'year'])
+        self.df['ratio'] = self.df.pct / self.df.pct_of_births
+        self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
+        self.df['category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
+        self.summary = self.df.groupby(by=['year', 'category'], as_index=False)['pct'].sum()
+        self.ratio = self.df[['year', 'ratio_rank']].copy()  # unplotted
+
+    def _regenerate_data(self):
         self._read_all_files()
         self._calculate_percentages()
         self.df.to_csv(self._data_fp, index=False)
@@ -30,16 +40,6 @@ class DataManager:
             self.df.loc[self.df.year == year, 'pct'] = (
                     self.df.loc[self.df.year == year, 'number'] / self.df.loc[self.df.year == year, 'number'].sum()
             )
-
-    def create_dataframes_to_plot(self):
-        self._pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['pct'].sum().rename(columns={
-            'pct': 'pct_of_births'})
-        self.df = self.df.merge(self._pct_of_births_table, on=['name', 'year'])
-        self.df['ratio'] = self.df.pct / self.df.pct_of_births
-        self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
-        self.df['category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
-        self.summary = self.df.groupby(by=['year', 'category'], as_index=False)['pct'].sum()
-        self.ratio = self.df[['year', 'ratio_rank']].copy()  # unplotted
 
     @property
     def _df(self):
