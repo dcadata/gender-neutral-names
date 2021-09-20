@@ -9,6 +9,7 @@ class DataManager:
     def __init__(self):
         self._years = tuple(range(1900, 2020 + 1))
         self.df = None
+        self._pct_of_births_table = None
         self.summary = None
         self.ratio = None
 
@@ -31,9 +32,9 @@ class DataManager:
             )
 
     def add_fields(self):
-        pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['pct'].sum().rename(
-            columns={'pct': 'pct_of_births'})
-        self.df = self.df.merge(pct_of_births_table, on=['name', 'year'])
+        self._pct_of_births_table = self.df.groupby(by=['name', 'year'], as_index=False)['pct'].sum().rename(columns={
+            'pct': 'pct_of_births'})
+        self.df = self.df.merge(self._pct_of_births_table, on=['name', 'year'])
         self.df['ratio'] = self.df.pct / self.df.pct_of_births
         self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
         self.df['category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
