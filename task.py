@@ -32,8 +32,7 @@ class DataManager:
         self.df.to_csv(self._data_fp, index=False)
 
     def _read_all_files(self):
-        dfs = [_read_one_file(f'data/yob{year}.txt').assign(year=year) for year in self._years]
-        self.df = pd.concat(dfs)
+        self.df = pd.concat(_read_one_file(f'data/yob{year}.txt').assign(year=year) for year in self._years)
 
     def _calculate_percentages(self):
         for year in self._years:
