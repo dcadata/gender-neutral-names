@@ -67,8 +67,8 @@ class DataManager:
 
 class Plotter(DataManager):
     def create_outputs(self):
-        self._plot_neutral_categories()
         self._plot_all_categories()
+        self._plot_neutral_categories()
         self._create_markdown_table()
 
     def _plot_all_categories(self):
