@@ -11,7 +11,6 @@ class DataManager:
         self.df = None
         self._pct_of_births_table = None
         self.summary = None
-        self.ratio = None
 
     def load_data_from_disk(self):
         self.df = self._df.copy()
@@ -24,7 +23,21 @@ class DataManager:
         self.df['ratio_rank'] = self.df.ratio.apply(lambda x: x - 0.5)
         self.df['category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
         self.summary = self.df.groupby(by=['year', 'category'], as_index=False)['pct'].sum()
-        self.ratio = self.df[['year', 'ratio_rank']].copy()  # unplotted
+
+    def calculate_most_neutral_names_by_yob(self):
+        df = self.df.loc[self.df.category.str.startswith(('1', '2')), [
+            'year', 'name', 'category', 'sex', 'ratio', 'number']].copy()
+        df.ratio = df.ratio.apply(lambda x: round(x, 3))
+        df = df[df.sex == 'F'].merge(df[df.sex == 'M'], on=['year', 'name', 'category'], suffixes=('_f', '_m')).drop(
+            columns=['sex_f', 'sex_m'])
+        df['number'] = df.number_f + df.number_m
+        year_dfs = dict(
+            (year, df[df.year == year].sort_values('number', ascending=False).drop(columns=['number']).head(50))
+            for year in self._years
+        )
+        for year, year_df in year_dfs.items():
+            year_df.to_csv(f'most_neutral_names_by_yob/{year}.csv', index=False)
+        pd.concat(year_dfs.values()).to_csv('most_neutral_names_by_yob/!all.csv', index=False)
 
     def _regenerate_data(self):
         self._read_all_files()
