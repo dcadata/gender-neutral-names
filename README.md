@@ -47,6 +47,6 @@ YOB: 2020
 
 ---
 
-# Most gender-neutral names for each year of birth
+# Most common gender-neutral names for each year of birth
 
-See the `most_neutral_names_by_yob` folder for data files corresponding to each year.
+See the `neutral_names_by_yob` folder for data files corresponding to each year.

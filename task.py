@@ -24,7 +24,7 @@ class DataManager:
         self.df['category'] = self.df.ratio_rank.apply(abs).apply(_categorize)
         self.summary = self.df.groupby(by=['year', 'category'], as_index=False)['pct'].sum()
 
-    def calculate_most_neutral_names_by_yob(self):
+    def calculate_neutral_names_by_yob(self):
         df = self.df.loc[self.df.category.str.startswith(('1', '2')), [
             'year', 'name', 'category', 'sex', 'ratio', 'number']].copy()
         df.ratio = df.ratio.apply(lambda x: round(x, 3))
@@ -36,8 +36,8 @@ class DataManager:
             for year in self._years
         )
         for year, year_df in year_dfs.items():
-            year_df.to_csv(f'most_neutral_names_by_yob/{year}.csv', index=False)
-        pd.concat(year_dfs.values()).to_csv('most_neutral_names_by_yob/!all.csv', index=False)
+            year_df.to_csv(f'neutral_names_by_yob/{year}.csv', index=False)
+        pd.concat(year_dfs.values()).to_csv('neutral_names_by_yob/!all.csv', index=False)
 
     def _regenerate_data(self):
         self._read_all_files()
