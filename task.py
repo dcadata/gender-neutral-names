@@ -66,29 +66,26 @@ class DataManager:
 
 
 class Plotter(DataManager):
-    def create_outputs(self):
-        self._plot_all_categories()
-        self._plot_neutral_categories()
-        self._create_markdown_table()
+    _fig_size = 8
 
-    def _plot_all_categories(self):
+    def plot_all_categories(self):
         plot = sns.pointplot(x='year', y='pct', hue='category', data=self.summary, palette='husl')
         fig = plot.get_figure()
         fig.autofmt_xdate()
-        fig.set_size_inches(10, 10)
+        fig.set_size_inches(self._fig_size, self._fig_size)
         fig.suptitle('Percentage of births accounted for by names in each category, 1900 to latest')
         fig.savefig('img/categories.png')
 
-    def _plot_neutral_categories(self):
+    def plot_neutral_categories(self):
         plot = sns.pointplot(x='year', y='pct', hue='category', data=self.summary[
             ~self.summary.category.str.startswith('5')], palette='husl')
         fig = plot.get_figure()
         fig.autofmt_xdate()
-        fig.set_size_inches(10, 10)
+        fig.set_size_inches(self._fig_size, self._fig_size)
         fig.suptitle('Percentage of births accounted for by gender-neutral names in each category, 1900 to latest')
         fig.savefig('img/categories_neutral.png')
 
-    def _create_markdown_table(self):
+    def create_markdown_table(self):
         df = self.summary.copy()
         year_min = df.year.min()
         year_max = df.year.max()
