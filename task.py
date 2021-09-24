@@ -75,7 +75,7 @@ class Plotter(DataManager):
         plot = sns.pointplot(x='year', y='pct', hue='category', data=self.summary, palette='husl')
         fig = plot.get_figure()
         fig.autofmt_xdate()
-        fig.set_size_inches(14, 14)
+        fig.set_size_inches(10, 10)
         fig.suptitle('Percentage of births accounted for by names in each category, 1900 to latest')
         fig.savefig('img/categories.png')
 
@@ -84,7 +84,7 @@ class Plotter(DataManager):
             ~self.summary.category.str.startswith('5')], palette='husl')
         fig = plot.get_figure()
         fig.autofmt_xdate()
-        fig.set_size_inches(14, 14)
+        fig.set_size_inches(10, 10)
         fig.suptitle('Percentage of births accounted for by gender-neutral names in each category, 1900 to latest')
         fig.savefig('img/categories_neutral.png')
 
