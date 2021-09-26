@@ -40,14 +40,12 @@ class DataManager:
             year_df.to_csv(f'neutral_names_by_yob/{year}.csv', index=False)
         pd.concat(year_dfs.values()).to_csv('neutral_names_by_yob/!all.csv', index=False)
 
-    def opposite_gendered_name_trends(self):
+    def calculate_opposite_gendered_name_trends(self):
         df = self.df.loc[self.df.category.str.startswith('5'), ['name', 'sex', 'year', 'ratio']].copy()
         df = df[df.sex == 'F'].merge(df[df.sex == 'M'], on=['name', 'year'], suffixes=('_f', '_m')).drop(columns=[
             'sex_f', 'sex_m'])
-        df['ratio_diff'] = df.ratio_f - df.ratio_m
-        df = df[df.ratio_diff != 0].copy()
-        df['ratio_cat'] = df.ratio_diff.apply(lambda x: 'F' if x > 0 else 'M')
-        df = df[['name', 'year', 'ratio_cat']].merge(self.df[['name', 'year', 'sex', 'pct']], on=['name', 'year'])
+        df['ratio_cat'] = (df.ratio_f - df.ratio_m).apply(lambda x: 'F' if x > 0 else 'M')
+        df = df.merge(self.df[['name', 'year', 'sex', 'pct']], on=['name', 'year'])
         df = df[df.ratio_cat != df.sex].groupby(by=['year', 'sex', 'ratio_cat'], as_index=False).pct.sum()
         self.opp = df.copy()
 
