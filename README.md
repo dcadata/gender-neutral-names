@@ -51,3 +51,11 @@ YOB: 2020
 
 See the [`neutral_names_by_yob`](neutral_names_by_yob) folder for data files corresponding to each year.
 
+---
+
+# "Opposite-gendered" name trends
+
+While the trend varies from one year to the next, it's more common for baby girls to be given masculine names than it is for baby boys to be given feminine names.
+
+![Percentage of births accounted for by opposite-gendered names, 1900 to latest](img/opposite.png)
+
