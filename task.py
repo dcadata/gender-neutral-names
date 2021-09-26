@@ -93,6 +93,15 @@ class Plotter(DataManager):
         fig.suptitle('Percentage of births accounted for by gender-neutral names in each category, 1900 to latest')
         fig.savefig('img/categories_neutral.png')
 
+    def plot_opposite_gendered_name_trends(self):
+        plot = sns.pointplot(x='year', y='pct', hue='birth_sex', data=self.opp.rename(columns={
+            'sex': 'birth_sex'}), palette='dark')
+        fig = plot.get_figure()
+        fig.autofmt_xdate()
+        fig.set_size_inches(12, 8)
+        fig.suptitle('Percentage of births accounted for by opposite-gendered names, 1900 to latest')
+        fig.savefig('img/opposite.png')
+
     def create_markdown_table(self):
         df = self.summary.copy()
         year_min = df.year.min()
