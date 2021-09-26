@@ -102,7 +102,7 @@ class Plotter(DataManager):
         fig.suptitle('Percentage of births accounted for by opposite-gendered names, 1900 to latest')
         fig.savefig('img/opposite.png')
 
-    def create_markdown_table(self):
+    def create_markdown_tables(self):
         df = self.summary.copy()
         year_min = df.year.min()
         year_max = df.year.max()
