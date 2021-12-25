@@ -1,5 +1,6 @@
 import pandas as pd
 import seaborn as sns
+
 from dtools import df2table
 
 
@@ -33,7 +34,7 @@ class DataManager:
             columns=['sex_f', 'sex_m'])
         df['number'] = df.number_f + df.number_m
         year_dfs = dict(
-            (year, df[df.year == year].sort_values('number', ascending=False).drop(columns=['number']).head(50))
+            (year, df[df.year == year].sort_values('number', ascending=False).drop(columns=['number']).head(100))
             for year in self._years
         )
         for year, year_df in year_dfs.items():
