@@ -24,14 +24,14 @@ class DataManager:
         self.summary = self.df.groupby(by=['year', 'category'], as_index=False)['pct'].sum()
 
     def calculate_neutral_names_by_yob(self):
-        df = self.df.loc[self.df.category.str.startswith(('1', '2')), [
+        df = self.df.loc[~self.df.category.str.startswith('5'), [
             'year', 'name', 'category', 'sex', 'ratio', 'number']].copy()
         df.ratio = df.ratio.apply(lambda x: round(x, 3))
         df = df[df.sex == 'F'].merge(df[df.sex == 'M'], on=['year', 'name', 'category'], suffixes=('_f', '_m')).drop(
             columns=['sex_f', 'sex_m'])
         df['number'] = df.number_f + df.number_m
         year_dfs = dict(
-            (year, df[df.year == year].sort_values('number', ascending=False).drop(columns=['number']).head(100))
+            (year, df[df.year == year].sort_values('number', ascending=False).drop(columns=['number']))
             for year in self._years
         )
         for year, year_df in year_dfs.items():
