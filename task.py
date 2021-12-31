@@ -1,13 +1,10 @@
 import pandas as pd
 import seaborn as sns
 
-from dtools import df2table
-
 
 class DataManager:
-    _data_fp = 'data/data.csv'
-
     def __init__(self):
+        self._data_fp = 'data/data.csv'
         self._years = tuple(range(1900, 2020 + 1))
         self.df = None
         self._pct_of_births_table = None
@@ -110,9 +107,9 @@ class Plotter(DataManager):
         df.pct = df.pct.apply(lambda x: round(x, 3))
         text = [
             f'**Year: {year_min}**',
-            df2table(df=df[df.year == year_min]),
+            df[df.year == year_min].to_markdown(index=False),
             f'**Year: {year_max}**',
-            df2table(df=df[df.year == year_max]),
+            df[df.year == year_max].to_markdown(index=False),
         ]
         open('markdown_table.txt', 'w').write('\n\n'.join(text))
 
