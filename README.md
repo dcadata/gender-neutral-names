@@ -47,12 +47,6 @@ YOB: 2020
 
 ---
 
-# Most common gender-neutral names for each year of birth
-
-See the [`neutral_names_by_yob`](neutral_names_by_yob) folder for data files corresponding to each year.
-
----
-
 # "Opposite-gendered" name trends
 
 While the trend varies from one year to the next, it's more common for baby girls to be given masculine names than it is for baby boys to be given feminine names (with "masculine" and "feminine" defined by the "highly gendered" category from above).
