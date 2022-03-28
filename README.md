@@ -23,28 +23,6 @@ Yes. While the vast majority of babies are still given gendered names, the perce
 
 ![Percentage of births accounted for by gender-neutral names in each category, 1900 to latest](img/categories_neutral.png)
 
-### Summary
-
-YOB: 1900
-
-| year | category | pct |
-| ----- | ----- | ----- |
-| 1900 | 1: most neutral | 0.003 |
-| 1900 | 2: very neutral | 0.011 |
-| 1900 | 3: somewhat neutral | 0.009 |
-| 1900 | 4: mostly gendered | 0.016 |
-| 1900 | 5: highly gendered | 0.96 |
-
-YOB: 2020
-
-| year | category | pct |
-| ----- | ----- | ----- |
-| 2020 | 1: most neutral | 0.016 |
-| 2020 | 2: very neutral | 0.019 |
-| 2020 | 3: somewhat neutral | 0.027 |
-| 2020 | 4: mostly gendered | 0.032 |
-| 2020 | 5: highly gendered | 0.907 |
-
 ---
 
 # "Opposite-gendered" name trends
